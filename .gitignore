@@ -1,0 +1,8 @@
+debug
+LocalStorage
+*.dat
+Makefile
+*.Debug
+*.Release
+ui_DialogLogin.h
+ui_mainwindow.h

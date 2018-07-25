@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>test.html</file>
+        <file>device.html</file>
+    </qresource>
+</RCC>

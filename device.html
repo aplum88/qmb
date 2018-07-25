@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>安监设备查询</title>
+	<meta http-equiv="expires" content="0">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container" style="margin-top:50px">
+<p>
+    <h4>1.宏电模块心跳和数据查询都输入物联网卡号</h4>
+    <h4>2.CCU模块心跳查询输入CCU唯一编号,数据查询输入8001唯一编号</h4>
+    <h4>3.所有编号都是10进制格式</h4>
+</p>
+<div style="margin-top:20px">
+    <span style="font-weight:bold">设备编号: </span><input class="form-control" style="width:200px" type="text" id="device" />
+
+</div>
+<br>
+<br>
+<div>
+    <button class="btn btn-primary" onclick="online_query('ccu')">CCU心跳查询</button>
+    <button class="btn btn-primary"  onclick="online_query('hd')">宏电心跳查询</button>
+</div>
+<br>
+<br>
+<div>
+    <button class="btn btn-primary"  onclick="data_query('ccu')">CCU数据查询</button>
+    <button class="btn btn-primary"  onclick="data_query('hd')">宏电数据查询</button>
+</div>
+<br>
+<br>
+<br>
+<br>
+<p id="msg">
+
+</p>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <th>设备地址</th>
+        <th>在线与否</th>
+        <th>有无数据</th>
+        <th>接收时间</th>
+        <th>设备时间</th>
+        <th>数据内容</th>
+        </thead>
+
+        <tbody id="dbody">
+
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">原始数据</h4>
+                </div>
+                <div class="modal-body" id="raw">
+
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>通道号</th>
+                            <th>振弦</th>
+                            <th>温度</th>
+                            <th>原始值</th>
+                            <th>修正值</th>
+                        </tr>
+                        </thead>
+                        <tbody id="J_TbData">
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+</div>
+</body>
+</html>
+
+
+<script>
+    var token=""
+    var global_data
+    var host="http://47.93.224.211:8000"
+    //var host="http://localhost:8000"
+    function online_query(val) {
+
+       $("#msg").text(data.addr+":在线");
+    }
+    function format_date(str) {
+        //2 2 2 2 2 2
+        var year = "20" + str.slice(0,2);
+        var mon = str.slice(2,4);
+        var day = str.slice(4,6);
+        var hour = str.slice(6,8);
+        var min = str.slice(8,10);
+        var sec = str.slice(10,12);
+
+        return year + "-" + mon + "-" + day + " " + hour +":" + min + ":" + sec;
+
+
+    }
+    Date.prototype.format = function(format) {
+        var date = {
+            "M+": this.getMonth() + 1,
+            "d+": this.getDate(),
+            "h+": this.getHours(),
+            "m+": this.getMinutes(),
+            "s+": this.getSeconds(),
+            "q+": Math.floor((this.getMonth() + 3) / 3),
+            "S+": this.getMilliseconds()
+        };
+        if (/(y+)/i.test(format)) {
+            format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+        }
+        for (var k in date) {
+            if (new RegExp("(" + k + ")").test(format)) {
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                        ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+            }
+        }
+        return format;
+    }
+    function format_online(online)
+    {
+        return online?"在线":"离线"
+    }
+    function format_hasdata(hasdata) {
+
+        return hasdata?"有数据":"无数据"
+    }
+    function format_rxtime(rxtime)
+    {
+
+        var newDate = new Date();
+        newDate.setTime(rxtime * 1000);
+
+        return newDate.format('yyyy-MM-dd hh:mm:ss');
+
+    }
+    function get_raw(self) {
+        console.log(self)
+        console.log(self.id)
+
+       var datalist = global_data.data[self.id].message.split("+")
+        var channels = global_data.data[self.id].channal;
+        $("#J_TbData").empty();
+        for( var i = 1; i < datalist.length; i+=2 ) {
+            //动态创建一个tr行标签,并且转换成jQuery对象
+            var $trTemp = $("<tr></tr>");
+
+            var index =  ((i-1)/2)+1
+
+            //往行里面追加 td单元格
+            $trTemp.append("<td>"+index+"</td>");
+            $trTemp.append("<td>"+ datalist[i] +"</td>");
+            $trTemp.append("<td>"+ datalist[i+1] +"</td>");
+            $trTemp.append("<td>"+channels[index-1].raw.toFixed(4) +"</td>");
+            $trTemp.append("<td>"+channels[index-1].value.toFixed(4) +"</td>");
+
+            // $("#J_TbData").append($trTemp);
+            $trTemp.appendTo("#J_TbData");
+        }
+
+       //$("#raw").text(global_data.data[self.id].message)
+
+        $('#myModal').modal({
+            keyboard: true
+        })
+
+        //$("#myModal").modal('show')
+    }
+    function data_query(val) {
+
+
+        $("#msg").text("");
+        $("#dbody").html("")
+        // var body = document.getElementById("dbody");
+        // body.innerHTML = "";
+        $.ajax({
+            type:"get",
+            url:host+"/status?query="+val+"&addr="+$("#device").val(),
+
+            success:function (data) {
+                console.log(data)
+                global_data = data
+                if(data.hasdata==true)
+                    $("#msg").text(data.addr+":有数据上传");
+                else
+                {
+                    $("#msg").text(data.addr+":无数据上传");
+                    return
+                }
+
+
+                var row=""
+                for(var i =0; i < data.data.length;i++)
+                {
+
+                    var date = format_date(data.data[i].message.slice(12,24))
+                    //console.log("date="+ date);
+                    row += "<tr>";
+                    row += "<td>" + data.addr + "</td>";
+                    row += "<td>" + format_online(data.online) + "</td>";
+                    row += "<td>" + format_hasdata(data.hasdata) + "</td>";
+
+                    row += "<td>" + format_rxtime(data.data[i].rxtime) + "</td>";
+                    row += "<td>" + date + "</td>";
+                    row += "<td><a class=button" + " id=" + i+ " onclick='get_raw(this)'>详情</a></td>";
+                    row += "</tr>"
+
+                }
+                var body = document.getElementById("dbody");
+                body.innerHTML = row;
+
+            },
+            error:function (data) {
+                console.log("error",data)
+            }
+
+        })
+    }
+   
+
+</script>
+
