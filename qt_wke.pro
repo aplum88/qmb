@@ -24,22 +24,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #“˝»Îwke“¿¿µø‚
 #LIBS+=$$PWD/lib/node.dll
-LIBS+=-luser32
+LIBS+=-luser32 -lgdi32 -lImm32
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-    DialogLogin.cpp
+    DialogLogin.cpp \
+    DialogWke.cpp \
+    QMiniBlink.cpp
 
 HEADERS += \
         mainwindow.h\
         wkedefine.h \
-    DialogLogin.h
+    DialogLogin.h \
+    DialogWke.h \
+    QMiniBlink.h
 
 
 
 FORMS += \
-        mainwindow.ui \
-    DialogLogin.ui
+    DialogLogin.ui \
+    DialogWke.ui
 
 RESOURCES += \
     resources.qrc

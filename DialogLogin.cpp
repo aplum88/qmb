@@ -75,7 +75,7 @@ DialogLogin::DialogLogin(QWidget *parent) :
     QFile file("debug/login.html");
     file.open(QIODevice::ReadOnly);
     wkeLoadHTML(webView,file.read(file.bytesAvailable()));
-
+    //wkeLoadURL(webView,"http://www.baidu.com");
     file.close();
     jsBindFunction("invokeClose",jsInvokeClose,1);
     jsBindFunction("invokeMouseUp",  JsonMouseUp,1);
