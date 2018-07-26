@@ -11,6 +11,17 @@ body{
     margin: 0;   
     background-color: #4A374A;   
 }   
+#title{
+	height: 30px;
+	text-shadow:1px 1px 1px;   
+    border-top: 1px solid #312E3D;   
+    border-left: 1px solid #312E3D;   
+    border-right: 1px solid #312E3D;   
+    border-bottom: 1px solid #56536A;   
+    border-radius: 4px;   
+    background-color: #5D2D3F;  
+	cursor:pointer;
+}
 #login{   
     position: absolute;   
     top: 50%;   
@@ -58,3 +69,28 @@ input{
     border-radius: 5px;   
     margin: 0;   
 }  
+.but:hover {
+    transform: scale(1.1);
+	background-color: #7a17d4;  
+}
+.close {
+    background: orange;
+    color: red;
+    border-radius: 12px;
+    line-height: 20px;
+    text-align: center;
+    height: 20px;
+    width: 20px;
+    font-size: 18px;
+    padding: 1px;
+    top: 5px;
+    right: 5px;
+    position: absolute;
+}
+.close:hover{
+	transform: scale(1.1);
+}
+/* use cross as close button */
+.close::before {
+    content: "\2716";
+}

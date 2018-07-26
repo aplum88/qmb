@@ -74,6 +74,7 @@ DialogLogin::DialogLogin(QWidget *parent) :
     wkeShowWindow(webView, TRUE);
     QFile file("debug/login.html");
     file.open(QIODevice::ReadOnly);
+    //wkeLoadHtmlWithBaseUrl(webView,file.read(file.bytesAvailable()),"res");
     wkeLoadHTML(webView,file.read(file.bytesAvailable()));
     //wkeLoadURL(webView,"http://www.baidu.com");
     file.close();

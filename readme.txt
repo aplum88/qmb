@@ -1,1 +1,4 @@
-本项目实现了一个QMiniBlink的类，只需要继承该类，就可以拥有miniblink的功能
+﻿本项目实现了一个QMiniBlink的类，只需要继承该类，就可以拥有miniblink的功能
+
+1.需要先把res目录下的文件拷贝到debug目录
+2.需要把node.dll拷贝到debug目录，或者调用wkeSetWkeDllPath设置node.dll的路径

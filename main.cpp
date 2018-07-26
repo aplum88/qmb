@@ -11,9 +11,14 @@ int main(int argc, char *argv[])
     //wkeSetWkeDllPath(reinterpret_cast<const wchar_t *>(dll.utf16()));
     wkeInitialize();
     QApplication a(argc, argv);
+#if 0
     DialogWke w;
-    //DialogLogin w;
-    w.show();
     w.LoadUrl("http://www.baidu.com");
+#else
+    DialogLogin w;
+
+#endif
+    w.show();
+
     return a.exec();
 }
