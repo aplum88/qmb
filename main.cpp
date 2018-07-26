@@ -1,11 +1,10 @@
-#include "mainwindow.h"
-#include <QApplication>
+ï»¿#include <QApplication>
 #include <wke.h>
 #include "DialogLogin.h"
 #include "DialogWke.h"
 int main(int argc, char *argv[])
 {
-    //³õÊ¼»¯wke
+    //åˆå§‹åŒ–wke
     //QString dll = "G:/qt_wke/lib/node.dll";
 
 

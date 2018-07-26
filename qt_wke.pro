@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-#“˝»Îwke“¿¿µø‚
+#ÂºïÂÖ•wke‰æùËµñÂ∫ì
 #LIBS+=$$PWD/lib/node.dll
 LIBS+=-luser32 -lgdi32 -lImm32
 SOURCES += \
@@ -32,7 +32,6 @@ SOURCES += \
     QMiniBlink.cpp
 
 HEADERS += \
-        mainwindow.h\
         wkedefine.h \
     DialogLogin.h \
     DialogWke.h \
