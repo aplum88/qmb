@@ -2,6 +2,8 @@
 #include "ui_DialogLogin.h"
 #include <QFile>
 #include <QDebug>
+
+#include <QSerialPortInfo>
 DialogLogin* login = NULL;
 //js调用c++接口
 jsValue JS_CALL jsInvokeClose(jsExecState es)
@@ -35,6 +37,33 @@ jsValue JS_CALL JsonMouseUp(jsExecState es)
     login->onMouseUp(x,y);
     return jsUndefined();
 }
+
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+jsValue JS_CALL JsCallListPorts(jsExecState es)
+{
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+
+    QStringList str;
+    QJsonDocument doc;
+    QJsonArray arr;
+
+    for(int i = 0; i < ports.size(); i++)
+    {
+        QJsonObject o;
+        o["value"] = ports[i].portName();
+        o["lable"] = ports[i].portName();
+        arr.push_back(o);
+    }
+    doc.setArray(arr);
+
+    QString json = doc.toJson();
+    qDebug() << "json = " << json;
+    return jsString(es,json.toStdString().c_str());
+
+
+}
 wkeWebView onCreateView(wkeWebView webView, void* param, wkeNavigationType navType, const wkeString urlStr, const wkeWindowFeatures* features)
 {
     const wchar_t* url = wkeGetStringW(urlStr);
@@ -53,7 +82,7 @@ DialogLogin::DialogLogin(QWidget *parent) :
     mMoveing=false;
    // setWindowFlags(Qt::FramelessWindowHint);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint |Qt::WindowStaysOnTopHint);
-        this->setStyleSheet("QDialog{border:2px solid green;}");
+        this->setStyleSheet("QDialog{border:1px solid black;}");
 
 
     login = this;
@@ -67,12 +96,12 @@ DialogLogin::DialogLogin(QWidget *parent) :
 //    wkeResize(webView, 800, 600);
 
 
-    webView= wkeCreateWebWindow(WKE_WINDOW_TYPE_CONTROL, (HWND)this->winId(), 0, 0, 800,600);
+    webView= wkeCreateWebWindow(WKE_WINDOW_TYPE_CONTROL, (HWND)this->winId(), 0, 30, 800,600);
     //显示wkeWebView
 //    wkeOnCreateView(webView, onCreateView, NULL);
 //    wkeMoveToCenter(webView);
     wkeShowWindow(webView, TRUE);
-    QFile file("debug/login.html");
+    QFile file("debug/demo.html");
     file.open(QIODevice::ReadOnly);
     //wkeLoadHtmlWithBaseUrl(webView,file.read(file.bytesAvailable()),"res");
     wkeLoadHTML(webView,file.read(file.bytesAvailable()));
@@ -82,6 +111,7 @@ DialogLogin::DialogLogin(QWidget *parent) :
     jsBindFunction("invokeMouseUp",  JsonMouseUp,1);
     jsBindFunction("invokeMouseDown",JsonMouseDown,1);
     jsBindFunction("invokeMouseMove",JsonMouseMove,1);
+    jsBindFunction("invokeListUarts",JsCallListPorts,1);
 
 }
 
@@ -126,8 +156,8 @@ void DialogLogin::onMouseUp(int x, int y)
 
 void DialogLogin::mousePressEvent(QMouseEvent *event)
 {
-    return;
-    qDebug() <<"mousePressEvent";
+
+
     mMoveing = true;
     //记录下鼠标相对于窗口的位置
     //event->globalPos()鼠标按下时，鼠标相对于整个屏幕位置
@@ -156,11 +186,11 @@ void DialogLogin::onMouseMove(int x, int y)
 }
 void DialogLogin::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() <<"mouseMoveEvent";
+
     //(event->buttons() && Qt::LeftButton)按下是左键
     //鼠标移动事件需要移动窗口，窗口移动到哪里呢？就是要获取鼠标移动中，窗口在整个屏幕的坐标，然后move到这个坐标，怎么获取坐标？
     //通过事件event->globalPos()知道鼠标坐标，鼠标坐标减去鼠标相对于窗口位置，就是窗口在整个屏幕的坐标
-    qDebug() << "move";
+
     if (mMoveing && (event->buttons() && Qt::LeftButton)
         && (event->globalPos()-mMovePosition).manhattanLength() > QApplication::startDragDistance())
     {

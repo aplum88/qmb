@@ -1,4 +1,4 @@
-debug
+debug/*.cpp
 LocalStorage
 *.dat
 Makefile
@@ -6,3 +6,10 @@ Makefile
 *.Release
 ui_DialogLogin.h
 ui_mainwindow.h
+*.ilk
+*.pdb
+*.exe
+*.manifest
+*.rc
+*.res
+debug_objects

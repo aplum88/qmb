@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets serialport
 
 TARGET = qt_wke
 TEMPLATE = app
@@ -24,6 +24,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #引入wke依赖库
 #LIBS+=$$PWD/lib/node.dll
+OBJECTS_DIR=debug_objects
+
 LIBS+=-luser32 -lgdi32 -lImm32
 SOURCES += \
         main.cpp \

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="res/css/element.css">
+	<link rel="stylesheet" href="res/css/demo.css">
+
+</head>
+
+<body>
+        <div id="app" >
+
+                <el-container>
+                        <el-header>   
+                                <el-tabs v-model="activeName" @tab-click="handleClick">
+                                        <el-tab-pane label="通讯配置" name="first">
+                                                <el-button @click="open3()">Click</el-button>
+                                        </el-tab-pane>
+                                        <el-tab-pane label="测量管理" name="second">配置管理</el-tab-pane>
+                                        <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+                                        <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+                                </el-tabs>
+                        </el-header>
+                        <el-container>
+                                <el-aside width="200px">
+
+                                                <el-select v-model="value" placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in options"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                                </el-select>
+                                </el-aside>
+                                <el-container>
+                                        <el-main>Main</el-main>
+                                        <el-footer>Footer</el-footer>
+                                </el-container>
+                        </el-container>
+                </el-container>      
+        </div>
+
+        
+</body>
+
+    <script src="res/js/vue.js" charset="utf-8"></script>
+    <script src="res/js/element.js" charset="utf-8"></script>
+    <script src="res/js/demo.js" charset="utf-8"></script>
+</html>
+        

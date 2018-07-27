@@ -1,0 +1,51 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>Login</title>  
+    <link rel="stylesheet" type="text/css" href="login.css"/>  
+</head>  
+<body >  
+	<div id="title" onmousedown="my_mousedown(event)" onmousemove="my_mousemove(event)" onmouseup="my_mouseup(event)">  
+	</div>
+    <div id="login" >  
+        <h1>Login</h1>  
+        <form method="post">  
+            <input type="text" required="required" placeholder="用户名" name="u"></input>  
+            <input type="password" required="required" placeholder="密码" name="p"></input>  
+            <button class="but" type="submit">登录</button>  
+        </form>  
+    </div>  
+	
+    <span class="close" onclick="close_me()"></span>
+	
+</body>  
+</html>  
+
+<script>
+
+function close_me()
+{
+	invokeClose();
+}
+function my_mousedown(e)
+{
+	var pageX = e.clientX;
+	var pageY = e.clientY;
+	invokeMouseDown(pageX,pageY);
+}
+function my_mouseup(e)
+{
+	var pageX = e.clientX;
+	var pageY = e.clientY;
+	invokeMouseUp(pageX,pageY);
+}
+function my_mousemove(e)
+{
+	var pageX = e.clientX;
+	var pageY = e.clientY;
+	invokeMouseMove(pageX,pageY);
+	//console.log("y=",pageY);
+	//console.log("x=",pageX);
+}
+</script>
